@@ -1,10 +1,14 @@
 # Elastalert Docker image running on Ubuntu 15.04.
-# Build image with: docker build -t ivankrizsan/elastalert:v1 .
+# Build image with: docker build -t ivankrizsan/elastalert:latest .
 
 FROM ubuntu:15.04
 
 MAINTAINER Ivan Krizsan, https://github.com/krizsan
 
+# Set this environment variable to true to set timezone on container start.
+ENV SET_CONTAINER_TIMEZONE false
+# Default container timezone as found under the directory /usr/share/zoneinfo/.
+ENV CONTAINER_TIMEZONE Europe/Stockholm
 # URL from which to download Elastalert.
 ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/v0.0.63.zip
 # Directory holding configuration for Elastalert and Supervisor.
@@ -31,12 +35,10 @@ WORKDIR /opt
 # Copy the script used to launch the Elastalert when a container is started.
 COPY ./start-elastalert.sh /opt/
 
-# Install software required for Elastalert.
+# Install software required for Elastalert and NTP for time synchronization.
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y wget python python-dev unzip gcc && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean && \
+    apt-get install -y wget python python-dev unzip gcc ntp && \
 # Install pip - required for installation of Elastalert.
     wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -64,7 +66,7 @@ RUN python setup.py install && \
     mkdir ${RULES_DIRECTORY} && \
     mkdir ${LOG_DIR} && \
 
-# Copy deafult configuration files to configuration directory.
+# Copy default configuration files to configuration directory.
     cp ${ELASTALERT_HOME}/config.yaml.example ${ELASTALERT_CONFIG} && \
     cp ${ELASTALERT_HOME}/supervisord.conf.example ${ELASTALERT_SUPERVISOR_CONF} && \
 
@@ -88,7 +90,12 @@ RUN python setup.py install && \
     cp ${ELASTALERT_CONFIG} ${ELASTALERT_HOME}/config.yaml && \
 
 # Add Elastalert to Supervisord.
-    supervisord -c ${ELASTALERT_SUPERVISOR_CONF}
+    supervisord -c ${ELASTALERT_SUPERVISOR_CONF} && \
+
+# Clean up.
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    apt-get purge --yes --auto-remove python-dev && \
+    apt-get clean
 
 # Define mount points.
 VOLUME [ "${CONFIG_DIR}", "${RULES_DIRECTORY}", "${LOG_DIR}"]
