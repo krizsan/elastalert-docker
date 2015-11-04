@@ -26,13 +26,15 @@ done
 rm -f garbage_file
 sleep 5
 
-# First time a container is started: Create a new Elastalert index.
-if [ -e "config.yaml" ]
+# Check if the Elastalert index exists in Elasticsearch and create it if it does not.
+if ! wget -O garbage_file ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status 2>/dev/null
 then
-	echo "First-time initialization: Creating Elastalert index"
+	echo "Creating Elastalert index in Elasticsearch..."
     elastalert-create-index --index elastalert_status --old-index ""
-    rm config.yaml
+else
+    echo "Elastalert index already exists in Elasticsearch."
 fi
+rm -f garbage_file
 
 echo "Starting Elastalert..."
 exec supervisord -c ${ELASTALERT_SUPERVISOR_CONF} -n
