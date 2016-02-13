@@ -1,5 +1,5 @@
 # Elastalert Docker Image
-Docker image with Elastalert on Ubuntu.
+Docker image with Elastalert on Alpine Linux.
 
 Requires a link to a Docker container running Elasticsearch using the "elasticsearch_host" alias.
 Assumes the use of port 9200 when communicating with Elasticsearch.<br/>
