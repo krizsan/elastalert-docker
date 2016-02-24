@@ -1,7 +1,9 @@
-# Elastalert Docker image running on Ubuntu 15.04.
+# Elastalert Docker image running on Alpine Linux.
 # Build image with: docker build -t ivankrizsan/elastalert:latest .
+#
+# The WORKDIR instructions are deliberately left, as it is recommended to use WORKDIR over the cd command.
 
-FROM ubuntu:15.04
+FROM iron/python:2
 
 MAINTAINER Ivan Krizsan, https://github.com/krizsan
 
@@ -36,9 +38,9 @@ WORKDIR /opt
 COPY ./start-elastalert.sh /opt/
 
 # Install software required for Elastalert and NTP for time synchronization.
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y wget python python-dev unzip gcc ntp && \
+RUN apk update && \
+    apk upgrade && \
+    apk add python-dev gcc musl-dev tzdata openntpd && \
 # Install pip - required for installation of Elastalert.
     wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -61,10 +63,11 @@ RUN python setup.py install && \
 # Make the start-script executable.
     chmod +x /opt/start-elastalert.sh && \
 
-# Create directories.
+# Create directories. The /var/empty directory is used by openntpd.
     mkdir ${CONFIG_DIR} && \
     mkdir ${RULES_DIRECTORY} && \
     mkdir ${LOG_DIR} && \
+    mkdir /var/empty && \
 
 # Copy default configuration files to configuration directory.
     cp ${ELASTALERT_HOME}/config.yaml.example ${ELASTALERT_CONFIG} && \
@@ -89,13 +92,13 @@ RUN python setup.py install && \
 # Copy the Elastalert configuration file to Elastalert home directory to be used when creating index first time an Elastalert container is launched.
     cp ${ELASTALERT_CONFIG} ${ELASTALERT_HOME}/config.yaml && \
 
-# Add Elastalert to Supervisord.
-    supervisord -c ${ELASTALERT_SUPERVISOR_CONF} && \
-
 # Clean up.
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    apt-get purge --yes --auto-remove python-dev && \
-    apt-get clean
+    apk del python-dev && \
+    apk del musl-dev && \
+    apk del gcc && \
+
+# Add Elastalert to Supervisord.
+    supervisord -c ${ELASTALERT_SUPERVISOR_CONF}
 
 # Define mount points.
 VOLUME [ "${CONFIG_DIR}", "${RULES_DIRECTORY}", "${LOG_DIR}"]
