@@ -64,10 +64,10 @@ RUN python setup.py install && \
     chmod +x /opt/start-elastalert.sh && \
 
 # Create directories. The /var/empty directory is used by openntpd.
-    mkdir ${CONFIG_DIR} && \
-    mkdir ${RULES_DIRECTORY} && \
-    mkdir ${LOG_DIR} && \
-    mkdir /var/empty && \
+    mkdir -p ${CONFIG_DIR} && \
+    mkdir -p ${RULES_DIRECTORY} && \
+    mkdir -p ${LOG_DIR} && \
+    mkdir -p /var/empty && \
 
 # Copy default configuration files to configuration directory.
     cp ${ELASTALERT_HOME}/config.yaml.example ${ELASTALERT_CONFIG} && \
