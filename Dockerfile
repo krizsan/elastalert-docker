@@ -11,8 +11,9 @@ MAINTAINER Ivan Krizsan, https://github.com/krizsan
 ENV SET_CONTAINER_TIMEZONE false
 # Default container timezone as found under the directory /usr/share/zoneinfo/.
 ENV CONTAINER_TIMEZONE Europe/Stockholm
-# URL from which to download Elastalert.
-ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/master.zip
+# URL from which to download Elastalert. Temporary point to ES5 host
+#ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/master.zip
+ENV ELASTALERT_URL https://github.com/suqld/elastalert/archive/support_es5.zip
 # Directory holding configuration for Elastalert and Supervisor.
 ENV CONFIG_DIR /opt/config
 # Elastalert rules directory.
