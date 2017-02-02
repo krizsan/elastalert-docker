@@ -30,7 +30,7 @@ sleep 5
 if ! wget -O garbage_file ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status 2>/dev/null
 then
 	echo "Creating Elastalert index in Elasticsearch..."
-    elastalert-create-index --config ${ELASTALERT_CONFIG} --index elastalert_status --old-index ""
+    elastalert-create-index --host ${ELASTICSEARCH_HOST} --port ${ELASTICSEARCH_PORT} --index elastalert_status --old-index ""
 else
     echo "Elastalert index already exists in Elasticsearch."
 fi
