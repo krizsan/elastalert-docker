@@ -40,7 +40,8 @@ COPY ./start-elastalert.sh /opt/
 # Install software required for Elastalert and NTP for time synchronization.
 RUN apk update && \
     apk upgrade && \
-    apk add python-dev gcc musl-dev tzdata openntpd && \
+    apk add ca-certificates openssl-dev libffi-dev python-dev gcc musl-dev tzdata openntpd && \
+    rm -rf /var/cache/apk/* && \
 # Install pip - required for installation of Elastalert.
     wget https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
@@ -56,6 +57,8 @@ WORKDIR ${ELASTALERT_HOME}
 # Install Elastalert.
 RUN python setup.py install && \
     pip install -e . && \
+    pip uninstall twilio --yes && \
+    pip install twilio==6.0.0 && \
 
 # Install Supervisor.
     easy_install supervisor && \
@@ -96,6 +99,8 @@ RUN python setup.py install && \
     apk del python-dev && \
     apk del musl-dev && \
     apk del gcc && \
+    apk del openssl-dev && \
+    apk del libffi-dev && \
 
 # Add Elastalert to Supervisord.
     supervisord -c ${ELASTALERT_SUPERVISOR_CONF}
