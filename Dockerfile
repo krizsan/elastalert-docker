@@ -42,9 +42,9 @@ RUN apk update && \
     apk upgrade && \
     apk add ca-certificates openssl-dev openssl libffi-dev python2 python2-dev py2-pip gcc musl-dev tzdata openntpd && \
 # Download and unpack Elastalert.
-    wget "${ELASTALERT_URL}" && \
-    unzip *.zip && \
-    rm *.zip && \
+    wget -O elastalert.zip "${ELASTALERT_URL}" && \
+    unzip elastalert.zip && \
+    rm elastalert.zip && \
     mv e* "${ELASTALERT_DIRECTORY_NAME}"
 
 WORKDIR "${ELASTALERT_HOME}"
