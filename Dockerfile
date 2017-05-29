@@ -41,7 +41,6 @@ COPY ./start-elastalert.sh /opt/
 RUN apk update && \
     apk upgrade && \
     apk add ca-certificates openssl-dev openssl libffi-dev python2 python2-dev py2-pip gcc musl-dev tzdata openntpd && \
-    rm -rf /var/cache/apk/* && \
 # Download and unpack Elastalert.
     wget "${ELASTALERT_URL}" && \
     unzip *.zip && \
@@ -92,11 +91,12 @@ RUN python setup.py install && \
     cp "${ELASTALERT_CONFIG}" "${ELASTALERT_HOME}/config.yaml" && \
 
 # Clean up.
-    apk del python-dev && \
+    apk del python2-dev && \
     apk del musl-dev && \
     apk del gcc && \
     apk del openssl-dev && \
     apk del libffi-dev && \
+    rm -rf /var/cache/apk/* && \
 
 # Add Elastalert to Supervisord.
     supervisord -c "${ELASTALERT_SUPERVISOR_CONF}"
