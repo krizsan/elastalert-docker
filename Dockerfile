@@ -3,7 +3,7 @@
 #
 # The WORKDIR instructions are deliberately left, as it is recommended to use WORKDIR over the cd command.
 
-FROM iron/python:2
+FROM alpine:3.6
 
 MAINTAINER Ivan Krizsan, https://github.com/krizsan
 
@@ -40,12 +40,8 @@ COPY ./start-elastalert.sh /opt/
 # Install software required for Elastalert and NTP for time synchronization.
 RUN apk update && \
     apk upgrade && \
-    apk add ca-certificates openssl-dev libffi-dev python-dev gcc musl-dev tzdata openntpd && \
+    apk add ca-certificates openssl-dev openssl libffi-dev python2 python2-dev py2-pip gcc musl-dev tzdata openntpd && \
     rm -rf /var/cache/apk/* && \
-# Install pip - required for installation of Elastalert.
-    wget https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    rm get-pip.py && \
 # Download and unpack Elastalert.
     wget ${ELASTALERT_URL} && \
     unzip *.zip && \
