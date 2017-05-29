@@ -31,6 +31,10 @@ ENV ELASTALERT_SUPERVISOR_CONF ${CONFIG_DIR}/elastalert_supervisord.conf
 ENV ELASTICSEARCH_HOST elasticsearchhost
 # Port on above Elasticsearch host. Set in default Elasticsearch configuration file.
 ENV ELASTICSEARCH_PORT 9200
+# Use TLS to connect to Elasticsearch (true or false)
+ENV ELASTICSEARCH_TLS false
+# Verify TLS
+ENV ELASTICSEARCH_TLS_VERIFY true
 
 WORKDIR /opt
 
