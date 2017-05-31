@@ -11,7 +11,7 @@ In addition, the Elastalert configuration file must also contain login credentia
 ```
 es_username: elastic
 es_password: changeme
-``
+```
 
 # Volumes
 - /opt/logs       - Elastalert and Supervisord logs will be written to this directory.
