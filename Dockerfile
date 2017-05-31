@@ -1,9 +1,7 @@
 # Elastalert Docker image running on Alpine Linux.
 # Build image with: docker build -t ivankrizsan/elastalert:latest .
-#
-# The WORKDIR instructions are deliberately left, as it is recommended to use WORKDIR over the cd command.
 
-FROM iron/python:2
+FROM alpine
 
 MAINTAINER Ivan Krizsan, https://github.com/krizsan
 
@@ -40,7 +38,7 @@ COPY ./start-elastalert.sh /opt/
 # Install software required for Elastalert and NTP for time synchronization.
 RUN apk update && \
     apk upgrade && \
-    apk add ca-certificates openssl-dev libffi-dev python-dev gcc musl-dev tzdata openntpd && \
+    apk --no-cache add ca-certificates python openssl openssl-dev libffi-dev python-dev gcc musl-dev tzdata openntpd && \
     rm -rf /var/cache/apk/* && \
 # Install pip - required for installation of Elastalert.
     wget https://bootstrap.pypa.io/get-pip.py && \

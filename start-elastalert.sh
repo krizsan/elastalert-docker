@@ -16,8 +16,13 @@ fi
 ntpd -s
 
 # Wait until Elasticsearch is online since otherwise Elastalert will fail.
+if [ -n "$ELASTICSEARCH_USER" ] && [ -n "$ELASTICSEARCH_PASSWORD" ]; then
+    export WGET_AUTH="$ELASTICSEARCH_USER:$ELASTICSEARCH_PASSWORD@"
+else
+    export WGET_AUTH=""
+fi
 rm -f garbage_file
-while ! wget -O garbage_file ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT} 2>/dev/null
+while ! wget -O garbage_file ${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT} 2>/dev/null
 do
 	echo "Waiting for Elasticsearch..."
 	rm -f garbage_file
@@ -27,7 +32,7 @@ rm -f garbage_file
 sleep 5
 
 # Check if the Elastalert index exists in Elasticsearch and create it if it does not.
-if ! wget -O garbage_file ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status 2>/dev/null
+if ! wget -O garbage_file ${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status 2>/dev/null
 then
 	echo "Creating Elastalert index in Elasticsearch..."
     elastalert-create-index --host ${ELASTICSEARCH_HOST} --port ${ELASTICSEARCH_PORT} --config ${ELASTALERT_CONFIG} --index elastalert_status --old-index ""
