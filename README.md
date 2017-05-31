@@ -11,7 +11,7 @@ In addition, the Elastalert configuration file must also contain login credentia
 ```
 es_username: elastic
 es_password: changeme
-```
+``
 
 # Volumes
 - /opt/logs       - Elastalert and Supervisord logs will be written to this directory.
@@ -19,7 +19,7 @@ es_password: changeme
 - /opt/rules      - Contains Elastalert rules.<br/>
 
 # Environment
-- SET_CONTAINER_TIMEZONE - Set to "true" (without quotes) to set the tiemzone when starting a container. Default is false.
+- SET_CONTAINER_TIMEZONE - Set to "true" (without quotes) to set the timezone when starting a container. Default is false.
 - CONTAINER_TIMEZONE - Timezone to use in container. Default is Europe/Stockholm.
 - ELASTICSEARCH_USER - Name of user to log into Ealsticsearch with. Leave undefined for no authentication.
 - ELASTICSEARCH_PASSWORD - Password to log into Elasticsearch with. Leave undefined for no authentication.
