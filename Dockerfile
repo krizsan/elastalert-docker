@@ -1,9 +1,7 @@
 # Elastalert Docker image running on Alpine Linux.
 # Build image with: docker build -t ivankrizsan/elastalert:latest .
-#
-# The WORKDIR instructions are deliberately left, as it is recommended to use WORKDIR over the cd command.
 
-FROM alpine:3.6
+FROM alpine
 
 MAINTAINER Ivan Krizsan, https://github.com/krizsan
 
