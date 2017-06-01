@@ -2,6 +2,21 @@
 
 set -e
 
+case "${ELASTICSEARCH_TLS}:${ELASTICSEARCH_TLS_VERIFY}" in
+  true:true)
+    WGET_SCHEMA='https://'
+    CREATE_EA_OPTIONS='--ssl --verify-certs'
+  ;;
+  true:false)
+    WGET_SCHEMA='https://'
+    CREATE_EA_OPTIONS='--ssl --no-verify-certs'
+  ;;
+  *)
+    WGET_SCHEMA='http://'
+    CREATE_EA_OPTIONS='--no-ssl'
+  ;;
+esac
+
 # Set the timezone.
 if [ "$SET_CONTAINER_TIMEZONE" = "true" ]; then
 	setup-timezone -z ${CONTAINER_TIMEZONE} && \
@@ -16,30 +31,21 @@ fi
 ntpd -s
 
 # Wait until Elasticsearch is online since otherwise Elastalert will fail.
-if [ -n "$ELASTICSEARCH_USER" ] && [ -n "$ELASTICSEARCH_PASSWORD" ]; then
-    export WGET_AUTH="$ELASTICSEARCH_USER:$ELASTICSEARCH_PASSWORD@"
-else
-    export WGET_AUTH=""
-fi
-rm -f garbage_file
-while ! wget -O garbage_file ${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT} 2>/dev/null
+while ! wget -q -T 3 -O - "${WGET_SCHEMA}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}" 2>/dev/null
 do
 	echo "Waiting for Elasticsearch..."
-	rm -f garbage_file
 	sleep 1
 done
-rm -f garbage_file
 sleep 5
 
 # Check if the Elastalert index exists in Elasticsearch and create it if it does not.
-if ! wget -O garbage_file ${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status 2>/dev/null
+if ! wget -q -T 3 -O - "${WGET_SCHEMA}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/elastalert_status" 2>/dev/null
 then
-	echo "Creating Elastalert index in Elasticsearch..."
-    elastalert-create-index --host ${ELASTICSEARCH_HOST} --port ${ELASTICSEARCH_PORT} --config ${ELASTALERT_CONFIG} --index elastalert_status --old-index ""
+    echo "Creating Elastalert index in Elasticsearch..."
+    elastalert-create-index ${CREATE_EA_OPTIONS} --host "${ELASTICSEARCH_HOST}" --port "${ELASTICSEARCH_PORT}" --config "${ELASTALERT_CONFIG}" --index elastalert_status --old-index ""
 else
     echo "Elastalert index already exists in Elasticsearch."
 fi
-rm -f garbage_file
 
 echo "Starting Elastalert..."
-exec supervisord -c ${ELASTALERT_SUPERVISOR_CONF} -n
+exec supervisord -c "${ELASTALERT_SUPERVISOR_CONF}" -n
