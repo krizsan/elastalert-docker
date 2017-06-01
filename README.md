@@ -23,3 +23,5 @@ es_password: changeme
 - CONTAINER_TIMEZONE - Timezone to use in container. Default is Europe/Stockholm.
 - ELASTICSEARCH_USER - Name of user to log into Ealsticsearch with. Leave undefined for no authentication.
 - ELASTICSEARCH_PASSWORD - Password to log into Elasticsearch with. Leave undefined for no authentication.
+- ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (true/false). Default is false.
+- ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (true/false). Default is false.
