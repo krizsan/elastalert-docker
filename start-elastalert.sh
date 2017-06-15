@@ -19,7 +19,7 @@ esac
 
 # Set the timezone.
 if [ "$SET_CONTAINER_TIMEZONE" = "true" ]; then
-	setup-timezone -z ${CONTAINER_TIMEZONE} && \
+	cp /usr/share/zoneinfo/${CONTAINER_TIMEZONE} /etc/localtime && \
 	echo "Container timezone set to: $CONTAINER_TIMEZONE"
 else
 	echo "Container timezone not modified"
