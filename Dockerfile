@@ -10,7 +10,7 @@ ENV SET_CONTAINER_TIMEZONE false
 # Default container timezone as found under the directory /usr/share/zoneinfo/.
 ENV CONTAINER_TIMEZONE Europe/Stockholm
 # URL from which to download Elastalert.
-ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/master.zip
+ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/v0.1.18.zip
 # Directory holding configuration for Elastalert and Supervisor.
 ENV CONFIG_DIR /opt/config
 # Elastalert rules directory.
@@ -47,6 +47,7 @@ RUN apk update && \
     wget -O elastalert.zip "${ELASTALERT_URL}" && \
     unzip elastalert.zip && \
     rm elastalert.zip && \
+    sed -i 's/elasticsearch/elasticsearch<3.0.0/g' elastalert-*/requirements.txt && \
     mv e* "${ELASTALERT_DIRECTORY_NAME}"
 
 WORKDIR "${ELASTALERT_HOME}"
