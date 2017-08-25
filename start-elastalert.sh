@@ -43,9 +43,13 @@ if [ ! -f ${ELASTALERT_CONFIG} ]; then
     # Set the port used by Elasticsearch at the above address.
     sed -i -e"s|es_port: [0-9]*|es_port: ${ELASTICSEARCH_PORT}|g" "${ELASTALERT_CONFIG}"
     # Set the user name used to authenticate with Elasticsearch.
-    sed -i -e"s|#es_username: [[:print:]]*|es_username: ${ELASTICSEARCH_USER}|g" "${ELASTALERT_CONFIG}"
+    if [ -n "${ELASTICSEARCH_USER}" ]; then
+        sed -i -e"s|#es_username: [[:print:]]*|es_username: ${ELASTICSEARCH_USER}|g" "${ELASTALERT_CONFIG}"
+    fi
     # Set the password used to authenticate with Elasticsearch.
-    sed -i -e"s|#es_password: [[:print:]]*|es_password: ${ELASTICSEARCH_PASSWORD}|g" "${ELASTALERT_CONFIG}"
+    if [ -n "${ELASTICSEARCH_PASSWORD}" ]; then
+        sed -i -e"s|#es_password: [[:print:]]*|es_password: ${ELASTICSEARCH_PASSWORD}|g" "${ELASTALERT_CONFIG}"
+    fi
     # Set the writeback index used with elastalert.
     sed -i -e"s|writeback_index: [[:print:]]*|writeback_index: ${ELASTALERT_INDEX}|g" "${ELASTALERT_CONFIG}"
 fi
