@@ -4,11 +4,11 @@ set -e
 
 # Set schema and elastalert options
 case "${ELASTICSEARCH_TLS}:${ELASTICSEARCH_TLS_VERIFY}" in
-    true:true)
+    True:True)
         WGET_SCHEMA='https://'
         CREATE_EA_OPTIONS='--ssl --verify-certs'
     ;;
-    true:false)
+    True:False)
         WGET_SCHEMA='https://'
         CREATE_EA_OPTIONS='--ssl --no-verify-certs'
     ;;
@@ -19,7 +19,7 @@ case "${ELASTICSEARCH_TLS}:${ELASTICSEARCH_TLS_VERIFY}" in
 esac
 
 # Set the timezone.
-if [ "$SET_CONTAINER_TIMEZONE" = "true" ]; then
+if [ "$SET_CONTAINER_TIMEZONE" = "True" ]; then
     cp /usr/share/zoneinfo/${CONTAINER_TIMEZONE} /etc/localtime && \
     echo "${CONTAINER_TIMEZONE}" >  /etc/timezone && \
     echo "Container timezone set to: $CONTAINER_TIMEZONE"

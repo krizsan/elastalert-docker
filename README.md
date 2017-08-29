@@ -22,12 +22,12 @@ es_password: changeme
 
 # Environment
 
-- SET_CONTAINER_TIMEZONE - Set to "true" (without quotes) to set the timezone when starting a container. Default is `false`.
+- SET_CONTAINER_TIMEZONE - Set to "True" (without quotes) to set the timezone when starting a container. Default is `False`.
 - CONTAINER_TIMEZONE - Timezone to use in container. Default is `Europe/Stockholm`.
 - ELASTICSEARCH_HOST - IP or hostname for your Elasticsearch host. Defaults to `elasticsearchhost`.
 - ELASTICSEARCH_PORT - Port for your Elasticsearch host. Defaults to `9200`.
 - ELASTICSEARCH_USER - Name of user to log into Ealsticsearch with. Leave undefined for no authentication.
 - ELASTICSEARCH_PASSWORD - Password to log into Elasticsearch with. Leave undefined for no authentication.
-- ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (true/false). Default is `false`.
-- ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (true/false). Default is `false`.
+- ELASTICSEARCH_TLS - Use HTTPS when connecting to Elasticsearch (True/False). Default is `False`.
+- ELASTICSEARCH_TLS_VERIFY - Verify server (Elasticsearch) certificate (True/False). Default is `False`.
 - ELASTALERT_INDEX - Name of Elastalert writeback index in Elasticseach. Defaults to `elastalert_status`.

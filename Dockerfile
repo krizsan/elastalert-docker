@@ -5,8 +5,8 @@ FROM alpine
 
 LABEL maintainer="Ivan Krizsan, https://github.com/krizsan"
 
-# Set this environment variable to true to set timezone on container start.
-ENV SET_CONTAINER_TIMEZONE false
+# Set this environment variable to True to set timezone on container start.
+ENV SET_CONTAINER_TIMEZONE False
 # Default container timezone as found under the directory /usr/share/zoneinfo/.
 ENV CONTAINER_TIMEZONE Europe/Stockholm
 # URL from which to download Elastalert.
@@ -27,10 +27,10 @@ ENV ELASTALERT_SUPERVISOR_CONF ${CONFIG_DIR}/elastalert_supervisord.conf
 ENV ELASTICSEARCH_HOST elasticsearchhost
 # Port on above Elasticsearch host. Set in default Elasticsearch configuration file.
 ENV ELASTICSEARCH_PORT 9200
-# Use TLS to connect to Elasticsearch (true or false)
-ENV ELASTICSEARCH_TLS false
+# Use TLS to connect to Elasticsearch (True or False)
+ENV ELASTICSEARCH_TLS False
 # Verify TLS
-ENV ELASTICSEARCH_TLS_VERIFY true
+ENV ELASTICSEARCH_TLS_VERIFY True
 # ElastAlert writeback index
 ENV ELASTALERT_INDEX elastalert_status
 
