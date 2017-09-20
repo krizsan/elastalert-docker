@@ -1,3 +1,6 @@
+IMPORTANT NOTE!
+This repository is put on hold for the time being, as I have submitted a pull-request to Yelp's Elastalert with the contents of this repository in order to create an official Elastalert Docker image.
+
 # Elastalert Docker Image
 
 Docker image with Elastalert on Alpine Linux.
