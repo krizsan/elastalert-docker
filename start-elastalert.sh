@@ -6,14 +6,17 @@ set -e
 case "${ELASTICSEARCH_TLS}:${ELASTICSEARCH_TLS_VERIFY}" in
     True:True)
         WGET_SCHEMA='https://'
+        WGET_OPTIONS='-q -T 3'
         CREATE_EA_OPTIONS='--ssl --verify-certs'
     ;;
     True:False)
         WGET_SCHEMA='https://'
+        WGET_OPTIONS='-q -T 3 --no-check-certificate'
         CREATE_EA_OPTIONS='--ssl --no-verify-certs'
     ;;
     *)
         WGET_SCHEMA='http://'
+        WGET_OPTIONS='-q -T 3'
         CREATE_EA_OPTIONS='--no-ssl'
     ;;
 esac
@@ -74,7 +77,7 @@ else
 fi
 
 # Wait until Elasticsearch is online since otherwise Elastalert will fail.
-while ! wget -q -T 3 -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}" 2>/dev/null
+while ! wget ${WGET_OPTIONS} -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}" 2>/dev/null
 do
     echo "Waiting for Elasticsearch..."
     sleep 1
@@ -82,7 +85,7 @@ done
 sleep 5
 
 # Check if the Elastalert index exists in Elasticsearch and create it if it does not.
-if ! wget -q -T 3 -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/${ELASTALERT_INDEX}" 2>/dev/null
+if ! wget ${WGET_OPTIONS} -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/${ELASTALERT_INDEX}" 2>/dev/null
 then
     echo "Creating Elastalert index in Elasticsearch..."
     elastalert-create-index ${CREATE_EA_OPTIONS} \
