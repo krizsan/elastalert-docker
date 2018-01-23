@@ -86,6 +86,7 @@ fi
 # Set authentication if needed
 if [ -n "$ELASTICSEARCH_USER" ] && [ -n "$ELASTICSEARCH_PASSWORD" ]; then
     WGET_AUTH="$ELASTICSEARCH_USER:$ELASTICSEARCH_PASSWORD@"
+    CREATE_EA_OPTIONS="${CREATE_EA_OPTIONS} --username ${ELASTICSEARCH_USER} --password ${ELASTICSEARCH_PASSWORD}"
 else
     WGET_AUTH=""
 fi
