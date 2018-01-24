@@ -67,6 +67,19 @@ if [ ! -f ${ELASTALERT_CONFIG} ]; then
     if [ -n "${ELASTICSEARCH_PASSWORD}" ]; then
         sed -i -e"s|#es_password: [[:print:]]*|es_password: ${ELASTICSEARCH_PASSWORD}|g" "${ELASTALERT_CONFIG}"
     fi
+
+    case "${ELASTICSEARCH_TLS}:${ELASTICSEARCH_TLS_VERIFY}" in
+        True:True)
+            sed -i -e"s|#use_ssl: [[:print:]]*|use_ssl: True|g" "${ELASTALERT_CONFIG}"
+            sed -i -e"s|#verify_certs: [[:print:]]*|verify_certs: True|g" "${ELASTALERT_CONFIG}"
+        ;;
+        True:False)
+            sed -i -e"s|#use_ssl: [[:print:]]*|use_ssl: True|g" "${ELASTALERT_CONFIG}"
+            sed -i -e"s|#verify_certs: [[:print:]]*|verify_certs: False|g" "${ELASTALERT_CONFIG}"
+        ;;
+        *)
+        ;;
+    esac
     # Set the writeback index used with elastalert.
     sed -i -e"s|writeback_index: [[:print:]]*|writeback_index: ${ELASTALERT_INDEX}|g" "${ELASTALERT_CONFIG}"
 fi
@@ -86,6 +99,7 @@ fi
 # Set authentication if needed
 if [ -n "$ELASTICSEARCH_USER" ] && [ -n "$ELASTICSEARCH_PASSWORD" ]; then
     WGET_AUTH="$ELASTICSEARCH_USER:$ELASTICSEARCH_PASSWORD@"
+    CREATE_EA_OPTIONS="${CREATE_EA_OPTIONS} --username ${ELASTICSEARCH_USER} --password ${ELASTICSEARCH_PASSWORD}"
 else
     WGET_AUTH=""
 fi
@@ -102,7 +116,7 @@ sleep 5
 if ! wget ${WGET_OPTIONS} -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/${ELASTALERT_INDEX}" 2>/dev/null
 then
     echo "Creating Elastalert index in Elasticsearch..."
-    elastalert-create-index ${CREATE_EA_OPTIONS} \
+    elastalert-create-index "${CREATE_EA_OPTIONS}" \
         --host "${ELASTICSEARCH_HOST}" \
         --port "${ELASTICSEARCH_PORT}" \
         --config "${ELASTALERT_CONFIG}" \
