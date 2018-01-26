@@ -69,6 +69,9 @@ if [ ! -f ${ELASTALERT_CONFIG} ]; then
     fi
     # Set the writeback index used with elastalert.
     sed -i -e"s|writeback_index: [[:print:]]*|writeback_index: ${ELASTALERT_INDEX}|g" "${ELASTALERT_CONFIG}"
+    # Set the TLS connection to communicate with Elasticsearch.
+    sed -i -e"s|#use_ssl: [[:print:]]*|use_ssl: ${ELASTICSEARCH_TLS}|g" "${ELASTALERT_CONFIG}"
+    sed -i -e"s|#verify_certs: [[:print:]]*|verify_certs: ${ELASTICSEARCH_TLS_VERIFY}|g" "${ELASTALERT_CONFIG}"
 fi
 
 # Elastalert Supervisor configuration:
