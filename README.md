@@ -1,3 +1,8 @@
+Note!
+This repository is no longer maintained! Changes to this repository will not result in the build of a new image on DockerHub.
+I suggest anyone interested in further developing this Docker image to fork this repository and create your own Docker image (on DockerHub).
+Thanks for your interest!
+
 # Elastalert Docker Image
 
 Docker image with Elastalert on Alpine Linux.
