@@ -103,7 +103,7 @@ if ! wget ${WGET_OPTIONS} -O - "${WGET_SCHEMA}${WGET_AUTH}${ELASTICSEARCH_HOST}:
 then
     echo "Creating Elastalert index in Elasticsearch..."
     elastalert-create-index ${CREATE_EA_OPTIONS} \
-        --host "${ELASTICSEARCH_HOST}" \
+        --host "${WGET_AUTH}${ELASTICSEARCH_HOST}" \
         --port "${ELASTICSEARCH_PORT}" \
         --config "${ELASTALERT_CONFIG}" \
         --index "${ELASTALERT_INDEX}" \
